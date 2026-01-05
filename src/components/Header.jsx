@@ -14,8 +14,13 @@ const buttonStyle = {
   transition: 'background-color 0.2s, color 0.2s',
 };
 
+const links = [
+  { label: "Tableau de bord", path: '/' },
+  { label: "Livres", path: '/books' },
+  { label: "Emprunts", path: '/Loan' }
+];
+
 function Header() {
-  // Helper to handle hover effect for inline styling
   const [hoveredIndex, setHoveredIndex] = React.useState(null);
 
   const getButtonStyle = idx => {
@@ -48,19 +53,24 @@ function Header() {
         Logo BookNest
       </div>
       <div style={{ display: 'flex', gap: '12px' }}>
-        {buttons.map((label, idx) => (
-          <button
-            key={idx}
-            style={getButtonStyle(idx)}
-            onMouseEnter={() => setHoveredIndex(idx)}
-            onMouseLeave={() => setHoveredIndex(null)}
+        {links.map((link, idx) => (
+          <Link
+            key={link.path}
+            to={link.path}
+            style={{ textDecoration: 'none' }}
           >
-            {label}
-          </button>
+            <button
+              style={getButtonStyle(idx)}
+              onMouseEnter={() => setHoveredIndex(idx)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              {link.label}
+            </button>
+          </Link>
         ))}
       </div>
     </header>
   );
-}
+};
 
-export default Header
+export default Header;
