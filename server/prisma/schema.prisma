@@ -12,19 +12,6 @@ datasource db {
   provider = "mysql"
 }
 
-model Book {
-  id    Int    @id @default(autoincrement())
-  title String
-  author    String
-  isbn      String?  @unique
-  publisher String?
-  year      Int?
-  category  String?
-  available Boolean  @default(true)
-  createdAt DateTime @default(now())
-  loans     Loan[]
-}
-
 model Client {
   id        Int      @id @default(autoincrement())
   name      String
@@ -32,6 +19,39 @@ model Client {
   phone     String?
   address   String?
   createdAt DateTime @default(now())
+
+  users     User[]
+  loans     Loan[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role     @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  clientId  Int?
+
+  client    Client?  @relation(fields: [clientId], references: [id])
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+model Book {
+  id        Int      @id @default(autoincrement())
+  title     String
+  author    String
+  isbn      String?  @unique
+  publisher String?
+  year      Int?
+  category  String?
+  available Boolean  @default(true)
+  createdAt DateTime @default(now())
+
   loans     Loan[]
 }
 
@@ -44,8 +64,7 @@ model Loan {
   dueDate    DateTime
   status     String   @default("active") // active, returned, overdue
   createdAt  DateTime @default(now())
-  
+
   book   Book   @relation(fields: [bookId], references: [id])
   client Client @relation(fields: [clientId], references: [id])
 }
-
