@@ -1,5 +1,5 @@
-import Header from '../components/Header'
-import DashboardCard from '../components/DashboardCard'
+import Header from '../../components/Header'
+import DashboardCard from '../../components/DashboardCard'
 import { FaBook, FaUsers, FaClipboardList, FaClock, FaPlus, FaUserPlus } from 'react-icons/fa'
 
 // Import Google Fonts (Inter as an example of a friendly, modern font)

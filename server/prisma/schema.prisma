@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Client {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+
+  users     User[]
+  loans     Loan[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role     @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  clientId  Int?
+
+  client    Client?  @relation(fields: [clientId], references: [id])
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+model Book {
+  id        Int      @id @default(autoincrement())
+  title     String
+  author    String
+  isbn      String?  @unique
+  publisher String?
+  year      Int?
+  category  String?
+  available Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  loans     Loan[]
+}
+
+model Loan {
+  id         Int      @id @default(autoincrement())
+  bookId     Int
+  clientId   Int
+  loanDate   DateTime @default(now())
+  returnDate DateTime?
+  dueDate    DateTime
+  status     String   @default("active") // active, returned, overdue
+  createdAt  DateTime @default(now())
+
+  book   Book   @relation(fields: [bookId], references: [id])
+  client Client @relation(fields: [clientId], references: [id])
+}
